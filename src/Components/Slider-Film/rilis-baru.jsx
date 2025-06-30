@@ -128,7 +128,7 @@ const RilisBaru = () => {
   return (
   <>
     <div className="px-8 py-12">
-        <h1 className="text-3xl font-bold mb-4">Top Rating Film dan Series Hari ini</h1>
+        <h1 className="text-3xl font-bold mb-4">Rilis Baru</h1>
         <Slider {...settings}>
           {images.map((img, index) => (
             <div key={index} className="px-2 relative">

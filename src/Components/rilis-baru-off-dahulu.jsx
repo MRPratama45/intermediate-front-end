@@ -1,9 +1,7 @@
 import React, {useState} from "react"
-import { useNavigate } from "react-router-dom"
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
-import ModalsImage from "./modals-image"
 import img1 from '../assets/poster/filmTrending/duttyAfterSchool.png'
 import img2 from '../assets/poster/filmTrending/guardiansGalaxy.png'
 import img3 from '../assets/poster/filmTrending/littleMermaid.png'
@@ -73,10 +71,9 @@ const RilisBaru= () =>{
     }
   ])
 
-
   const [selectedImage, setSelectedImage] = useState(null)
-  const [showModals, setShowModals] = useState(false)
-  const navigate = useNavigate()
+  // const [showModals, setShowModals] = useState(false)
+  // const navigate = useNavigate()
 
   const settingCarousel =  {
     dots: true,
@@ -119,7 +116,7 @@ const RilisBaru= () =>{
   return (
     <>
       <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Rilis Baru</h1>
+      <h1 className="text-3xl font-bold mb-6 text-white">Rilis Baru</h1>
 
       {/* slider */}
       <Slider {...settingCarousel}>
@@ -140,13 +137,13 @@ const RilisBaru= () =>{
           ))}
         </Slider>
 
-        {showModals && (
+        {/* {showModals && (
           <ImageDetailModal 
             image={selectedImage}
             // onClose={() => setShowModals(false)}
             // onDelete={handleDeleteImageModals}
           />
-        )}
+        )} */}
       </div>
       {/* end slider */}
     

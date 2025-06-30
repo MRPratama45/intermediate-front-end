@@ -14,7 +14,8 @@ const SlideFilm = () => {
       <MelanjutkanFilm />
       <TopRating />
       <FilmTrending />
-      <RilisBaru />      
+      <RilisBaru />
+      
     </div>
   </>
   )

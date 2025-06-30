@@ -1,4 +1,5 @@
 import iconLogo from "../assets/vector/Vector-film.png"
+import vectorBottom from "../assets/vector/vector-bottom.png"
 const Footer = () => {
   return(
     <>
@@ -18,7 +19,7 @@ const Footer = () => {
                    <span>
                      <button>
                        <img
-                        src=""
+                        src={vectorBottom}
                         alt="vector-bottom"
                         className=" s:relative s:top-3 lg:invisible"
                       />
@@ -66,7 +67,7 @@ const Footer = () => {
                   <p className="font-bold">Bantuan</p>
                   <span>
                     <img
-                      src=""
+                      src={vectorBottom}
                       alt="vector-bottom"
                       className="md:relative md:top-3 lg:invisible"
                     />
