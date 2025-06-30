@@ -1,50 +1,43 @@
-import { useContext } from "react"
-import { WatchlistContext } from "../context/watchlist-context"
-import Navbar from "../Components/navbar"
-import {Link} from "react-router-dom"
+import {Link} from "react-router"
 import star from "../assets/vector/Vector-star.png"
 
-const DaftarSaya = () =>{
-  const {watchlist, removeFromWatchlist} = useContext(WatchlistContext)
-  // console.log(watchlist)
-
+const Watchlist = ({watchlist, onRemove}) =>{
   return (
     <>
-    <Navbar />
-      <div className="bg-black text-white">      
+      <div>
+        <h1>Daftar Saya</h1>
         {watchlist.length === 0 ? (
-          <div className="text-center text-black">
+          <div>
+            <p>Daftar Film Saya Kosong</p>
             <Link to="/"
               className="bg-blue-600 text-white px-6 py-2 rounded hover: transition-colors"
             >
-              Tambah Film Terdaftar
+              Film Terdaftar
             </Link>
           </div>
         ) : (
           <div>
             {watchlist.map((movie) => {
-              return (
-                <div key={movie.id} className="border rounded-lg p-4 flex">
+              <div key={movie.id}>
                 <img 
                   src={movie.url} 
-                  alt={movie.title} 
-                  className="w-24 h-32 object-cover mr-4"
+                  alt={movie.tittle} 
+                  className=""
                 />
                 <div>
-                  <h3>{movie.title}</h3>
+                  <h3>{movie.tittle}</h3>
                   <div>
                     <img src={star} alt="rating" className=""/>
                     <span>{movie.score}</span>
                   </div>
                 </div>
                 <button
-                  onClick={() => removeFromWatchlist(movie.id)}
+                  onClick={() => onRemove(movie.id)}
                   className=""
                 >
                   X
                 </button>
               </div>
-              )  
             })}
           </div>
         )}
@@ -53,4 +46,4 @@ const DaftarSaya = () =>{
   )
 }
 
-export default DaftarSaya
+export default Watchlist

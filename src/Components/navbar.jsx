@@ -18,9 +18,9 @@ const Navbar = () => {
           <img src={iconLogo} alt="icon-Chill" className=""/>
           <h2 className="font-bold text-2xl"><a href="/">CHILL</a></h2>
           <ul className="flex gap-20 ms-10">
-            <li className=""><a href="/series">Series</a></li>
-            <li className=""><a href="/films">Film</a></li>
-            <li className=""><a href="/daftarSaya">Daftar Saya</a></li>
+            <li className=""><Link to="/series">Series</Link></li>
+            <li className=""><Link to="/films">Film</Link></li>
+            <li className=""><Link to="/daftar-Saya">Daftar Saya</Link></li>
           </ul>
         </div>
 
