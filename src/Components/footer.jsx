@@ -1,9 +1,10 @@
 import iconLogo from "../assets/vector/Vector-film.png"
 import vectorBottom from "../assets/vector/vector-bottom.png"
-const Footer = () => {
+const Footer = ({className}) => {
   return(
     <>
-         <div className="bg-black text-white p-24">
+    <div className={className}>
+      <div className="bg-black text-white p-24 sticky bottom-0 w-full ">
            <div className="">
              <div className="lg:grid lg:grid-cols-4 lg:justify-center lg:items-center md:inline-block">
                <div className="block w-full">
@@ -85,6 +86,8 @@ const Footer = () => {
             </div>
           </div>
         </div>
+    </div>
+         
     </>
   )
 }

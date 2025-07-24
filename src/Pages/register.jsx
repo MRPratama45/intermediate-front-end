@@ -1,21 +1,57 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+
+
+import { authService } from "../services/api/auth-service";
+
+
 import vectorChill from "../assets/vector/Vector-film.png";
 import vectorMata from "../assets/vector/Vector-mata.png";
 import vectorGoogle from "../assets/vector/vector-google.png";
 import myBackground from "../assets/background/login.jpg";
 
 const Registrasi = () => {
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); 
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    confirmPassword: ''
+  })
+
+
+  // handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true)
+
+    try {
+      await authService.register(formData)
+      navigate('/login') // jika berhasil to login page
+    } catch (error) {
+      console.log('error-page-register: ',error)
+      setError(error.message)
+
+    }finally {
+      setLoading(false)
+    }
+  }
+
+
   return (
     <>
       <div className="">
         <img className="w-screen" src={myBackground} alt="bg-login" />
         <div
           className="w-screen absolute flex justify-center 
-        2xl:top-1/4 2xl:-left-5
-        xl:top-0 xl:left-0 
-        lg:top-0 lg:left-0  
-        md:top-0 md:left-0  
-        sm:top-0 sm:left-0  
-        s:top-0  s:left-0"
+          2xl:top-1/4 2xl:-left-5
+          xl:top-0 xl:left-0 
+          lg:top-0 lg:left-0  
+          md:top-0 md:left-0  
+          sm:top-0 sm:left-0  
+          s:top-0  s:left-0"
         >
           <div className="rounded-2xl p-5 bg-black  text-white">
             <div className="header-login font-bold px-32">
@@ -30,10 +66,12 @@ const Registrasi = () => {
               <p>Selamat Datang!</p>
             </div>
             <div className="input-login">
-              <form action="" method="get">
+              <form onSubmit={ handleSubmit}>
                 <label htmlFor="username"> Username</label>
                 <input
                   type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({...formData, username: e.target.value})}
                   placeholder="Masukkan username"
                   className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                 />
@@ -43,6 +81,8 @@ const Registrasi = () => {
                 <div className="max-w-full ">
                   <input
                     type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({...formData, password: e.target.value})}
                     placeholder="Masukkan Kata Sandi"
                     className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                   />
@@ -56,6 +96,8 @@ const Registrasi = () => {
                   <label htmlFor="password">Konfirmasi Kata Sandi</label>
                   <input
                     type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({...formData, password: e.target.value})}
                     placeholder="Masukkan Kata Sandi"
                     className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                   />
@@ -69,7 +111,7 @@ const Registrasi = () => {
                   <p>
                     Belum Punya Akun?{" "}
                     <span>
-                      <a className="text-white " href="/login">
+                      <a className="text-white " href="/">
                         Masuk
                       </a>
                     </span>
@@ -82,9 +124,10 @@ const Registrasi = () => {
                 <div className="submit text-center">
                   <button
                     type="submit"
+                    disabled={loading}
                     className="border-2 bg-slate-600 border-gray-700 rounded-full p-1 w-full"
                   >
-                    Daftar
+                    {loading ? 'loading daftar ...' : 'Daftar'}
                   </button>
                   <p className="my-2 text-slate-500 ">atau</p>
                   <button
