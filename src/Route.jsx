@@ -6,22 +6,41 @@ import Registrasi from "./Pages/register.jsx"
 import DaftarSaya from "./Pages/daftar-saya.jsx"
 import Film from "./Pages/film.jsx"
 import Profile from "./Pages/profil.jsx"
+import AuthWrapper from "./services/api/auth-wrapper.jsx"
+import ProtectedRoute from "./Components/protect-route.jsx"
 
 
 function RouteMaster() {
 
   return (
       <BrowserRouter>
-        <WatchlistProvider>
-          <Routes>
-            <Route path="/" element={<Login/>} />
-            <Route path="/dashboard" element={<Dashboard/>} />
-            <Route path="/registrasi" element={<Registrasi />} />
-            <Route path="/daftar-saya" element={<DaftarSaya />} />
-            <Route path="/film" element={<Film />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-        </WatchlistProvider>
+        <AuthWrapper>
+          <WatchlistProvider>
+            <Routes>
+              <Route path="/" element={<Login/>} />
+              <Route path="/registrasi" element={<Registrasi />} />
+
+              {/* protect */}
+              <Route path="/dashboard" element={<ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>} 
+              />
+              <Route path="/daftar-saya" element={<ProtectedRoute>
+                  <DaftarSaya />
+                </ProtectedRoute>} 
+              />
+              <Route path="/film" element={<ProtectedRoute>
+                  <Film />
+                </ProtectedRoute>} 
+              />
+              <Route path="/profile" element={<ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>} 
+              />
+              {/* end protect */}
+            </Routes>
+          </WatchlistProvider>
+        </AuthWrapper>
       </BrowserRouter>
   )
 }

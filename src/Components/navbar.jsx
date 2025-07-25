@@ -17,7 +17,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await authService.logout()
-      window.location.href = '/' //full refresh untuk bersihkan state
+      window.location.reload() //full refresh untuk bersihkan state
     } catch (error) {
       console.log('error-logout: ', error);
     }
@@ -77,7 +77,7 @@ const Navbar = () => {
                 <li>
                   <div className="flex p-2">
                     <img src={iconKeluar} alt="venctor-profil" className="me-3 w-5" />
-                    <button onClick={handleLogout}>keluar</button>
+                    <button type="button" onClick={handleLogout}>keluar</button>
                   </div>
                 </li>
               </ul>

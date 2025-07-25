@@ -1,5 +1,5 @@
 import { useNavigate, Link } from "react-router";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import { authService } from "../services/api/auth-service";
 
@@ -18,6 +18,17 @@ const Login = () => {
   })
   const navigate = useNavigate();
 
+  // cek jika sudah login
+    useEffect(() =>{
+      const currentUser = authService.getCurrentUser()
+
+      if (currentUser) {
+        navigate('/Dashboard')
+      }
+    }, [navigate])
+  // end cek jika sudah login
+
+
   // handle submit
   const handleSubmit = async (e) =>{
     e.preventDefault();
@@ -26,17 +37,42 @@ const Login = () => {
 
     // logika proses login
     try {
-      await authService.login(FormData)
+      const response = await authService.login(formData)
+      console.log('login respon debug: ', response);
+      
+
+      // validasi tambahan / cek token
+      if (!response?.token) {
+        console.log('error validasi/cek token');
+        
+        throw new Error ('Login Gagal: token tidak diterima')
+      }
+
+      // memastikan penyimanan token dalam beberapa detik
+      await new Promise(resolve => setTimeout(resolve, 2000))
+
       navigate('/Dashboard') // redirect to dashboard dengan login sukses
     } catch (error) {
       console.log('error-page-login: ',error);
-      setError(error.message)
+
+      // handle error spesifik
+        if (error.response?.status === 401) {
+          setError('Username atau Password salah')
+        
+        } else if (error.response?.status === 404) {
+          setError('Akuntidak ditemukan')
+      
+        } else {
+          setError('Terjadi kesalahan saat login')
+        }
+      // end handle error spesifik
+    
     }finally {
       setLoading(false)
     }
     // end logika proses login
   }
-
+  // end handle submit
 
   return (
     <>
@@ -69,8 +105,8 @@ const Login = () => {
                 <input
                   type="text"
                   value={formData.username}
-                  placeholder="Masukkan username"
                   onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  placeholder="Masukkan username"
                   className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                 />
                 <br />

@@ -27,7 +27,64 @@
   }, []);
   // end pemanggilan data saaat kondisi mount 
   
+================ regis page ==============
+ // try {
+    //   await authService.register(formData)
+    //   navigate('/') // jika berhasil to login page
+    // } catch (error) {
+    //   console.log('error-page-register: ',error)
+    //   setError(error.message)
 
+    // }finally {
+    //   setLoading(false)
+    // }
+
+    // ============== authService.jsx ========================
+      // if (response.status >= 200 && response.status < 300) {
+      //   console.log('Response dari login-auth:', response);
+      // } else {
+      //   console.log('status-valid-struktur-respon-login-auth-service: ', response.error);
+      //   throw new Error('struktur respon tidak valid karen: ', response.error)
+        
+      // }
+
+      // localStorage.setItem('token', response.data.token)
+      // localStorage.setItem('username', JSON.stringify(
+      //   response.data.username,
+      //   ...response.data.username
+      // ))
+      // localStorage.setItem('password', JSON.stringify(response.data.password))
+      //
+      //
+      // return authData ? JSON.parse(authData) : null
+      //
+      // // ============================================
+      // const userStr = localStorage.getItem('user')
+      // return userStr ? JSON.parse(userStr) : null
+      //
+      // ======================================= get current user
+      // const serverError = {
+      //         // server error
+      //         message : error.response.data?.message,
+      //         status: error.response.status,
+      //         data: error.response.data
+      //       }
+      //       console.log('API error: ', serverError)
+      //       return serverError
+
+      // error jaringan atau lainnya
+            // console.log('network error: ', error.message)
+            // return {message: 'Network error', status: 0}
+      //
+      //
+
+
+
+
+
+    regis, done
+    login, 
+    protec, done
 
 
 
