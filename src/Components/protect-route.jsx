@@ -1,22 +1,29 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+// import { useEffect } from "react";
+import { Navigate } from "react-router";
 
 
-import { authService } from "../services/api/auth-service";
+// import { authService } from "../services/api/auth-service";
 
 const ProtectedRoute = ({children}) => {
-  const navigate = useNavigate()
-  const currentUser = authService.getCurrentUser()
+ 
+  const isLoginIn = localStorage.getItem('user')
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/', {replace: true})
-    }
-
-  },[currentUser, navigate])
-
-  return currentUser ? children : null
+  if (!isLoginIn || isLoginIn === null) {
+    return <Navigate to="/" />
+  }
+  
+  return children
 
 }
 
-export default ProtectedRoute
+const AuthRoute = ({children}) => {
+  const isLoginIn = localStorage.getItem('user') !== null
+
+  if (isLoginIn) {
+    return <Navigate to="/Dashboard" replace/>
+  }
+
+  return children
+}
+
+export {ProtectedRoute, AuthRoute}

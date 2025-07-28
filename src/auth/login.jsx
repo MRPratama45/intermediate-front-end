@@ -10,23 +10,33 @@ import vectorGoogle from "../assets/vector/vector-google.png";
 import myBackground from "../assets/background/login.jpg";
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   })
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   // cek jika sudah login
     useEffect(() =>{
-      const currentUser = authService.getCurrentUser()
+      const user = localStorage.getItem('user')
 
-      if (currentUser) {
-        navigate('/Dashboard')
+      if (user) {
+        navigate('/dashboard')
       }
     }, [navigate])
   // end cek jika sudah login
+
+    // handle change
+  function handleChange(e) {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  }
+    // end handle change
 
 
   // handle submit
@@ -39,19 +49,8 @@ const Login = () => {
     try {
       const response = await authService.login(formData)
       console.log('login respon debug: ', response);
-      
 
-      // validasi tambahan / cek token
-      if (!response?.token) {
-        console.log('error validasi/cek token');
-        
-        throw new Error ('Login Gagal: token tidak diterima')
-      }
-
-      // memastikan penyimanan token dalam beberapa detik
-      await new Promise(resolve => setTimeout(resolve, 2000))
-
-      navigate('/Dashboard') // redirect to dashboard dengan login sukses
+      navigate('/dashboard') // redirect to dashboard dengan login sukses
     } catch (error) {
       console.log('error-page-login: ',error);
 
@@ -104,8 +103,9 @@ const Login = () => {
                 <label htmlFor="username"> Username</label>
                 <input
                   type="text"
+                  name="username"
                   value={formData.username}
-                  onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  onChange={handleChange}
                   placeholder="Masukkan username"
                   className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                 />
@@ -115,8 +115,9 @@ const Login = () => {
                 <div className="max-w-full ">
                   <input
                     type="password"
+                    name="password"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={handleChange}
                     placeholder="Masukkan Kata Sandi"
                     className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                   />

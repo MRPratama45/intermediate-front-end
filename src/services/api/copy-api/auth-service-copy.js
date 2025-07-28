@@ -1,50 +1,16 @@
 // import { useNavigate } from "react-router";
 import apiClient from "./axios-config";
 
+// const navigate = useNavigate()
+
 export const authService = {
-
-
-  // update data profile
-  async updateProfile(id, data) {
-    try {
-      const response = await apiClient.put(`/user/${id}`, data)
-
-      // update local storage
-      localStorage.setItem('user', JSON.stringify(response.data))
-
-      return response
-    } catch (error) {
-      console.log('error-update: ', error);
-      throw error
-    }
-  },
-  // end update data profile
-
-  // delete
-  async DeleteProfile(id){
-    try {
-      const response = await apiClient.delete(`/user/${id}`)
-
-      // delete local storage
-      localStorage.removeItem('user')
-      return response
-    } catch (error) {
-      console.log(error);
-      
-    }
-  },
-  // end delete
 
   // auth regis
   async register(userData) {
     try {
-      const response = await apiClient.post('/user', userData)
-
-      // simpan ke local storage
-      localStorage.setItem('user', JSON.stringify(response.data))
+      const response = await apiClient.post('/register', userData)
 
       console.log('Response dari register-auth:', response);
-
       return {
         status: response.status,
         data: response.data
@@ -56,18 +22,35 @@ export const authService = {
   },
   // end auth regis
   
-  // auth login  
+  // auth login
+  isAuthenticated(){
+    return !!this.getCurrentUser()
+  },
+  
   async login(credentials) {
     try {
-      const response = await apiClient.post('/user', credentials)
+      const response = await apiClient.post('/Login', credentials)
+
       console.log('auth - service debug: ', response);
+      
+
+      // makesure struktur valid response (success/tidak sukses)
+      if (!response.data?.token) {
+        console.log('Response dari login-auth:', response);
+         throw new Error('struktur respon tidak valid karen: ', response.error)
+      }
 
       // simpan token dan user data ke local storage
-      localStorage.setItem('user', JSON.stringify(response.data))
+      localStorage.setItem('auth', JSON.stringify({
+        token: response.data.token,
+        username: response.data.username || {username: credentials.username}
+      }))
       
       return response.data
     } catch (error) {
+      localStorage.removeItem('auth')
       console.log('error-login-auth-service: ', error);
+      this.clearAuth()
       throw error
     }
   },
@@ -92,19 +75,19 @@ export const authService = {
   // end logout
 
   // menyimpan ke local storage
-  // getCurrentUser() {
-  //   try {
-  //     const authData = localStorage.getItem('auth')
-  //     if (!authData) return null
+  getCurrentUser() {
+    try {
+      const authData = localStorage.getItem('auth')
+      if (!authData) return null
 
-  //     return JSON.parse(authData)
-  //     } catch (error) {
-  //       console.log('error-getCurrentUser-auth-service:', error);
-  //       this.clearAuth()
-  //       return null
-  //     }
+      return JSON.parse(authData)
+      } catch (error) {
+        console.log('error-getCurrentUser-auth-service:', error);
+        this.clearAuth()
+        return null
+      }
 
-  //   }, 
+    }, 
     clearAuth(){
       localStorage.removeItem('auth')
       // localStorage.removeItem('token')
@@ -156,8 +139,5 @@ export const authService = {
     console.error (`Auth Error [${statusCode}]: `, errorMessage);
     return new Error(errorMessage)    
   }
-
-
-  
 }
 

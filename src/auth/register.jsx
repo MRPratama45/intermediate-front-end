@@ -1,35 +1,55 @@
-import { useState } from "react";
+import { useState  } from "react";
 import {  useNavigate } from "react-router";
-
+import { useEffect } from "react"; 
 
 import { authService } from "../services/api/auth-service";
 
-
+// img/icon
 import vectorChill from "../assets/vector/Vector-film.png";
 import vectorMata from "../assets/vector/Vector-mata.png";
 import vectorGoogle from "../assets/vector/vector-google.png";
 import myBackground from "../assets/background/login.jpg";
+// end img/icon
+
 
 const Registrasi = () => {
   
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate(); 
-  const [formData, setFormData] = useState({
+   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
   })
+  const navigate = useNavigate(); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+ 
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
+
+  // cek jika sudah login
+      useEffect(() =>{
+        const user = localStorage.getItem('user')
+  
+        if (user) {
+          navigate('/dashboard')
+        }
+      }, [navigate])
+    // end cek jika sudah login
+
+  // handle change
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name] : e.target.value
+    })
+  }
+  // end handle change
 
   // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true)
     setError(null)
-
-   // handle submit with validasi pada client-side
+   
     if (formData.password !== formData.confirmPassword) {
       setError('password dan konfirmasi password tidak sesuai')
       setLoading(false)
@@ -43,14 +63,12 @@ const Registrasi = () => {
     }
 
     try {
-      const response = await authService.register({
-      username: formData.username,
-      password: formData.password
-      })
+      const response = await authService.register(formData)
 
       // kondisi jika berhasil
       if (response.status >= 200 && response.status < 300 ) {
-        navigate('/') //to login page
+        //to login page
+        navigate('/')
         console.log('Response dari register:', response);
       } else {
         setError(response.message || 'Registrasi gagal')
@@ -67,7 +85,6 @@ const Registrasi = () => {
     } finally {
       setLoading(false)
     }
-  // end handle submit with validasi
   }
   // end handle submit
 
@@ -117,12 +134,13 @@ const Registrasi = () => {
             {/* end kondisi */}
 
             <div className="input-login">
-              <form onSubmit={ handleSubmit}>
+              <form onSubmit={handleSubmit}>
                 <label htmlFor="username"> Username</label>
                 <input
                   type="text"
+                  name="username"
                   value={formData.username}
-                  onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  onChange={handleChange}
                   placeholder="Masukkan username"
                   required
                   className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
@@ -133,8 +151,9 @@ const Registrasi = () => {
                 <div className="max-w-sm">
                   <input
                     type={showPassword ? 'text' : 'password'}
+                    name="password"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={handleChange}
                     placeholder="Masukkan Kata Sandi"
                     required
                     className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"

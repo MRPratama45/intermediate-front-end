@@ -1,6 +1,6 @@
-import { useState } from "react"
-import {Link} from "react-router"
-import { authService } from "../services/api/auth-service"
+import { useState} from "react"
+import {Link, useNavigate} from "react-router"
+// import { authService } from "../services/api/auth-service"
 
 
 import iconLogo from "../assets/vector/Vector-film.png"
@@ -13,11 +13,18 @@ import iconKeluar from "../assets/vector/Vector-list-akun-keluar.png"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
+
+  // cek user login atau tidak
+  // const isLogin = localStorage.getItem('user' !== null)
   
   const handleLogout = async () => {
     try {
-      await authService.logout()
-      window.location.reload() //full refresh untuk bersihkan state
+      // hapus data user from local storage
+      localStorage.removeItem('user')
+
+      // redirect to login page
+      navigate("/");
     } catch (error) {
       console.log('error-logout: ', error);
     }
