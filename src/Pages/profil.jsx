@@ -84,7 +84,7 @@ const Profile = () => {
         <h1 className="text-2xl font-bold mb-3">Profile</h1>
         {pesan && <p className={pesan.includes('success') ? 'sukses' : 'error'}>{pesan}</p>}
         <div>
-          <button type="submit" onClick={handleDelete}>Delete</button>
+          <button type="submit" onClick={handleDelete} className="bg-red-700 rounded-md p-2">Delete Akun</button>
         </div>
         <div>
           <div className="flex">
