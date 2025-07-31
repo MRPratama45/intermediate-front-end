@@ -58,11 +58,11 @@ const Navbar = () => {
           </button>
         </div>
       </div>
-      <div className="avatar flex items-center me-24 text-white ">           
+      <div className="avatar flex items-center me-24 text-white relative">           
             <div
               className={`${
                 isOpen ? "block" : "hidden"
-              } listDetailAkun text-left absolute right-6 top-16 w-44 bg-black rounded-md`}
+              } listDetailAkun text-left absolute right-6 top-16 w-44 bg-black rounded-md z-50 md:right-6 sm:right-2`}
             >
               <ul>
                 <li>

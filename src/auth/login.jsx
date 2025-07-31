@@ -29,48 +29,55 @@ const Login = () => {
     }, [navigate])
   // end cek jika sudah login
 
+
     // handle change
   function handleChange(e) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    
+    // clear error user ketik
+    if (error) {
+      setError(null);
+    }
   }
     // end handle change
 
 
   // handle submit
-  const handleSubmit = async (e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    setError(null)
 
-    // logika proses login
-    try {
-      const response = await authService.login(formData)
-      console.log('login respon debug: ', response);
-
-      navigate('/dashboard') // redirect to dashboard dengan login sukses
-    } catch (error) {
-      console.log('error-page-login: ',error);
-
-      // handle error spesifik
-        if (error.response?.status === 401) {
-          setError('Username atau Password salah')
-        
-        } else if (error.response?.status === 404) {
-          setError('Akuntidak ditemukan')
-      
-        } else {
-          setError('Terjadi kesalahan saat login')
-        }
-      // end handle error spesifik
-    
-    }finally {
-      setLoading(false)
+    // Validasi client-side
+    if (!formData.username.trim()) {
+      setError('Username harus diisi');
+      return;
     }
-    // end logika proses login
-  }
+    if (!formData.password.trim()) {
+      setError('Password harus diisi');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const user = await authService.login(formData);
+      console.log('Login berhasil:', user);
+      
+      // Redirect ke dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.message);
+      
+      // Auto clear error setelah 5 detik
+      setTimeout(() => setError(null), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
   // end handle submit
 
   return (

@@ -1,4 +1,3 @@
-// import { useNavigate } from "react-router";
 import apiClient from "./axios-config";
 
 export const authService = {
@@ -36,59 +35,67 @@ export const authService = {
   // end delete
 
   // auth regis
-  async register(userData) {
-    try {
-      const response = await apiClient.post('/user', userData)
+  // async register(userData) {
+  //   try {
+  //     const response = await apiClient.post('/user', userData)
 
-      // simpan ke local storage
-      localStorage.setItem('user', JSON.stringify(response.data))
+  //     // simpan ke local storage
+  //     localStorage.setItem('user', JSON.stringify(response.data))
 
-      console.log('Response dari register-auth:', response);
+  //     console.log('Response dari register-auth:', response);
 
-      return {
-        status: response.status,
-        data: response.data
-      }
-    } catch (error) {
-      console.log('error-register-auth-service: ', error);
-      throw this.handleError(error)
-    }
-  },
+  //     return {
+  //       status: response.status,
+  //       data: response.data
+  //     }
+  //   } catch (error) {
+  //     console.log('error-register-auth-service: ', error);
+  //     throw this.handleError(error)
+  //   }
+  // },
   // end auth regis
   
   // auth login  
-  async login(credentials) {
-    try {
-      const response = await apiClient.post('/user', credentials)
-      console.log('auth - service debug: ', response);
+  async login({ username, password }) {
+    const response = await apiClient.get('/user');
+    const user = response.data.find(
+      u => u.username === username && u.password === password
+    );
 
-      // simpan token dan user data ke local storage
-      localStorage.setItem('user', JSON.stringify(response.data))
-      
-      return response.data
-    } catch (error) {
-      console.log('error-login-auth-service: ', error);
-      throw error
+    if (!user) {
+      throw new Error('Username atau password salah');
     }
+
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
+  },
+
+  async register(data) {
+    const response = await apiClient.post('/user', data);
+    return response.data;
+  },
+
+  logout() {
+    localStorage.removeItem('user');
   },
   // end auth login
  
   // logout
-  async logout() {
-    try {
-      // panggil API logout jika diperlukan
-      await apiClient.post('/logout')
-      // navigate('/')
-    } catch (error) {
-      console.log('error-logout-auth-service: ', error);
-      throw this.handleError(error)
-    } finally {
-      // clear local storage
-      localStorage.removeItem('auth')
-      // localStorage.removeItem('token')
-      // localStorage.removeItem('username')
-    }
-  },
+  // async logout() {
+  //   try {
+  //     // panggil API logout jika diperlukan
+  //     await apiClient.post('/logout')
+  //     // navigate('/')
+  //   } catch (error) {
+  //     console.log('error-logout-auth-service: ', error);
+  //     throw this.handleError(error)
+  //   } finally {
+  //     // clear local storage
+  //     localStorage.removeItem('auth')
+  //     // localStorage.removeItem('token')
+  //     // localStorage.removeItem('username')
+  //   }
+  // },
   // end logout
 
   // menyimpan ke local storage
@@ -141,7 +148,7 @@ export const authService = {
           break;
   
         default:
-          errorMessage = error.response.dadta?.message || 'error dari server (be)'
+          errorMessage = error.response.data?.message || 'error dari server (be)'
       }
       
     } else if (error.request) {

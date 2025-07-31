@@ -1,21 +1,24 @@
 import Navbar from "../Components/navbar";
 import Footer from "../Components/footer";
-import ComponentDaftarSaya from "../Components/component-daftar-saya";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { authService } from "../services/api/auth-service";
-// import { authService } from "../services/api/auth-service";
+
+
+import ComponentDaftarSaya from "../Components/component-daftar-saya";
+import iconProfile from "../assets/account/account-profile.png"
+import speakerLangganan from "../assets/vector/Vector-speaker-teriak.png"
+
 
 const Profile = () => {
 
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
     password: ''
   })
 
   const [pesan, setPesan] = useState('');
+  // const [previewURL, setPreviewURL] = useState('');
   const navigete = useNavigate();
 
   // load user data saat komponen dimount (dimount= diproses)
@@ -34,6 +37,21 @@ const Profile = () => {
 
   },[navigete])
 
+  // handleImage
+    // const handleImage = (e) => {
+    //   const selectedFileImage = e.target.files[0]
+
+    //   if (selectedFileImage) {
+        
+    //     // preview gambar
+    //     const readerPreview = new FileReader();
+    //     readerPreview.onload = () => {
+    //       setPreviewURL(readerPreview.result)
+    //     }
+    //     readerPreview.readAsDataURL(selectedFileImage)
+    //   }
+    // }
+  // handleImage
 
   // handle change
   const handleChange = (e) => {
@@ -47,9 +65,16 @@ const Profile = () => {
   // handleDelete
   const handleDelete = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const response = await axios.delete(authService.DeleteProfile(user.id));
-      setPesan(response.data.message);
+      const user = JSON.parse(localStorage.getItem('user'))
+
+       if (!user?.id) {
+        setPesan('Data user tidak valid');
+        return;
+      }
+
+      const response = await authService.DeleteProfile(user.id)
+      alert('data berhasil di hapus');
+      setPesan('data berhasil di hapus');
 
       navigete('/');
     } catch (error) {
@@ -65,10 +90,12 @@ const Profile = () => {
     e.preventDefault()
     try {
       const user = JSON.parse(localStorage.getItem('user'));
-      const response = await axios.put(authService.updateProfile(user.id, formData));
+      // const response = await axios.put(authService.updateProfile(user.id, formData));
+      const response = await authService.updateProfile(user.id, formData);
 
       setPesan(response.data.message);
-      
+      alert('Username dan password berhasil di ubah');
+      navigete('/dashboard');
     } catch (error) {
       console.log('ini error: ',error);
       
@@ -76,6 +103,7 @@ const Profile = () => {
   }
   // end handle button edit profile
 
+  
 
   return (
     <div>
@@ -84,34 +112,34 @@ const Profile = () => {
         <h1 className="text-2xl font-bold mb-3">Profile</h1>
         {pesan && <p className={pesan.includes('success') ? 'sukses' : 'error'}>{pesan}</p>}
         <div>
-          <button type="submit" onClick={handleDelete} className="bg-red-700 rounded-md p-2">Delete Akun</button>
+          <button type="submit" onClick={handleDelete}  className="bg-red-700 rounded-md p-2">Delete Akun</button>
         </div>
         <div>
           <div className="flex">
           {/* kiri */}
             <div className="flex-col w-1/2">
-              <div className="flex">
-                <img src="" alt="icon-profile" />
+              <div className="flex-col">
+                <img src={iconProfile} alt="icon-profile" className="w-36 my-2" />
                 <div>
-                  <button className="bg-red-700">Ubah Foto</button>
-                  <p><span><img src="" alt="icon-upload-img" /></span> Maksimal 2MB</p>  
+                  <input type="file" accept="image/" />
+                  <div className="flex gap-2 my-2">
+                    <p>Maksimal 2MB</p>   
+                    <button className="bg-blue-700 rounded-lg px-1">Ubah Foto</button>
+                  </div>
                 </div>
               </div>
               <form onSubmit={handleEditProfile}>
                 <div className="bg-slate-600 border-2 border-black rounded-md p-1 w-3/4 relative">
                   <p >Nama Pengguna</p>
-                  <input type="text" className="w-3/4 text-black" value={formData.username} onChange={handleChange} name="username" required/>
-                  <img src="" alt="icon-edit" className="absolute right-0 bottom-5"/>
+                  <input type="text" className="bg-slate-600 w-3/4 text-white" value={formData.username} onChange={handleChange} name="username" required/>
                 </div>          
                 <div className="bg-slate-600 border-2 border-black rounded-md p-1 w-3/4 relative">
                   <p >Email</p>
-                  <input type="email" className="w-3/4 text-black" value={formData.user} onChange={handleChange} name="email"/>
-                  <img src="" alt="icon-edit" className="absolute right-0 bottom-5" />
+                  <input type="email" className="bg-slate-600 w-3/4 text-white" onChange={handleChange} name="email"/>
                 </div>
                 <div className="bg-slate-600 border-2 border-black rounded-md p-1 w-3/4 relative">
                   <p >Kata Sandi</p>
-                  <input type="password" className="w-3/4 text-black" value={formData.password}  onChange={handleChange} name="password" required/>
-                  <img src="" alt="icon-edit" className="absolute right-0 bottom-5" />
+                  <input type="password" className="bg-slate-600 w-3/4 text-white" value={formData.password}  onChange={handleChange} name="password" required/>
                 </div>
               <button className="bg-blue-700 rounded-lg p-1 mt-2">Simpan</button>
               </form>
@@ -119,7 +147,7 @@ const Profile = () => {
             {/* kanan */}
             <div className="flex w-2/6 h-3/4 rounded-lg bg-slate-500 p-3"> 
               <div className="w-1/4">
-                <img src="" alt="icon-speaker-teriak" />
+                <img src={speakerLangganan} alt="icon-speaker-teriak" />
               </div>
               <div className="w-full">
                 <h4 className="font-bold ">Saat ini anda belum berlangganan</h4>

@@ -17,6 +17,7 @@ const Registrasi = () => {
    const [formData, setFormData] = useState({
     username: '',
     password: '',
+    confirmPassword: ''
   })
   const navigate = useNavigate(); 
   const [loading, setLoading] = useState(false);
@@ -41,51 +42,42 @@ const Registrasi = () => {
       ...formData,
       [e.target.name] : e.target.value
     })
+     if (error) setError(null);
   }
   // end handle change
 
   // handle submit
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true)
-    setError(null)
-   
-    if (formData.password !== formData.confirmPassword) {
-      setError('password dan konfirmasi password tidak sesuai')
-      setLoading(false)
-      return
-    }
-
-    if (formData.password.length < 2) {
-      setError('password tidak boleh kurang dari 2')
-      setLoading(false)
-      return
-    }
-
-    try {
-      const response = await authService.register(formData)
-
-      // kondisi jika berhasil
-      if (response.status >= 200 && response.status < 300 ) {
-        //to login page
-        navigate('/')
-        console.log('Response dari register:', response);
-      } else {
-        setError(response.message || 'Registrasi gagal')
+      e.preventDefault();
+      
+      // Validasi
+      if (!formData.username || !formData.password || !formData.confirmPassword) {
+        setError('Semua field harus diisi');
+        return;
       }
       
-    } catch (error) {
-      console.log('Registrasi-page: ', error);
-       if (error.response?.status === 409) {
-          setError('username sudah terdaftar')
-        } else {
-          setError(error.message || 'terjadi kesalahan saat Registrasi')
-        }
+      if (formData.password !== formData.confirmPassword) {
+        setError('Password dan konfirmasi password tidak sama');
+        return;
+      }
 
-    } finally {
-      setLoading(false)
-    }
-  }
+      setLoading(true);
+      setError(null);
+
+      try {
+        await authService.register({
+          username: formData.username,
+          password: formData.password
+        });
+        
+        alert('Registrasi berhasil! Silakan login');
+        navigate('/dashboard');
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
   // end handle submit
 
   // handle visible password
@@ -174,8 +166,10 @@ const Registrasi = () => {
                   <input
                     type={showPasswordConfirm ? 'text' : 'password'}
                     value={formData.confirmPassword}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                    name="confirmPassword"
+                    onChange={handleChange}
                     placeholder="Masukkan Kata Sandi"
+                    required
                     className="w-full rounded-full bg-transparent border-2 border-gray-700 p-2"
                   />
                   <button 
